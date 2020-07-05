@@ -4,7 +4,7 @@ import Citizen from "../components/Citizen";
 
 export default ({dimension, color, connections, population, onClick}) => {
   let colorToShow = "black";
-  switch(color % 3){
+  switch(color){
     case 0: colorToShow = "white"; break;
     case 1: colorToShow = "#ff8f8f"; break;
     case 2: colorToShow = "#8f93ff"; break;
@@ -37,13 +37,21 @@ export default ({dimension, color, connections, population, onClick}) => {
       onClick = {onClick}
     >
       {
-        population.map(citizen => {
-          return(
-            <Citizen
-              party = {citizen}
-            />
-          )
-        })
+        (population.length > 0) ? 
+        (
+          population.map(citizen => {
+            return(
+              <Citizen
+                party = {citizen}
+              />
+            )
+          })
+        ) : (
+          <Citizen
+            party = {0}
+          />
+        )
+        
       }
     </div>
   )
