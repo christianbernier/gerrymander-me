@@ -2,17 +2,21 @@ import React from "react";
 import {css, Global} from "@emotion/core";
 import {Helmet} from "react-helmet-async";
 
+import Favicon from "../../favicon.png";
+import ShareImage from "../../share-image.png";
+
 export default () => {
   return(
     <>
       <Helmet>
         <title>GerrymanderMe!</title>
+        <link rel="shortcut icon" href={Favicon} />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="GerrymanderMe!" />
         <meta property="og:title" content="GerrymanderMe!" />
         <meta property="og:description" content="Help a corrupt government gerrymander districts as fast as possible!" />
         <meta property="twitter:card" content="summary_large_image" />
-        {/* <meta property="og:image" content="https://cdn.glitch.com/d0248aaf-2315-4c71-a38d-f7d60856f1f7%2FShare%20Image.png?v=1584911180910"/> */}
+        <meta property="og:image" content={ShareImage}/>
         <meta property="description" content="Help a corrupt government gerrymander districts as fast as possible!"/>
       </Helmet>
       <Global
@@ -28,7 +32,7 @@ export default () => {
           body{
             padding: 0;
             margin: 0;
-            background-color: #F7FAFC;
+            background-color: #939393;
           }
 
           p{

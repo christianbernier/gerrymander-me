@@ -2,21 +2,31 @@ import React from "react";
 import {css} from "@emotion/core";
 import Citizen from "../components/Citizen";
 
-export default ({dimension, color, connections, population, onClick}) => {
+export default ({dimension, color, connections, population, onClick, primaryParty}) => {
   let colorToShow = "black";
-  switch(color){
-    case 0: colorToShow = "white"; break;
-    case 1: colorToShow = "#ff8f8f"; break;
-    case 2: colorToShow = "#8f93ff"; break;
-    default: colorToShow = "black";
+  if(primaryParty === "red"){
+    switch(color){
+      case 0: colorToShow = "white"; break;
+      case 1: colorToShow = "#ff8f8f"; break;
+      case 2: colorToShow = "#8f93ff"; break;
+      default: colorToShow = "black";
+    }
+  } else if(primaryParty === "blue"){
+    switch(color){
+      case 0: colorToShow = "white"; break;
+      case 1: colorToShow = "#8f93ff"; break;
+      case 2: colorToShow = "#ff8f8f"; break;
+      default: colorToShow = "black";
+    }
   }
+  
 
-  const maxBorderRadius = "40px";
+  const maxBorderRadius = "25px";
 
   return(
     <div
       css={css`
-        width: calc((80vh - (5px * ${dimension + 1})) / ${dimension});
+        width: calc((70vh - (5px * ${dimension + 1})) / ${dimension});
         height: 100%;
         margin: 0 2.5px;
         display: inline-flex;
@@ -43,12 +53,14 @@ export default ({dimension, color, connections, population, onClick}) => {
             return(
               <Citizen
                 party = {citizen}
+                primaryParty = {primaryParty}
               />
             )
           })
         ) : (
           <Citizen
             party = {0}
+            primaryParty = {primaryParty}
           />
         )
         

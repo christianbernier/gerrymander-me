@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { css } from "@emotion/core";
+
 import Tile from "../components/Tile";
 import GlobalCSS from "../components/GlobalCSS";
+import VoteBar from "../components/VoteBar";
+import PartySelector from "../components/PartySelector";
+
+import Logo from "../../logo.png";
 
 export default () => {
-  const gridDimension = 5;
+  const gridDimension = 9;
   const populationGoal = 8;
-  const numOfDistricts = 5;
+  const numOfDistricts = 13;
   const totalPopulation = populationGoal * numOfDistricts;
 
   const [grid, setGrid] = useState([]);
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [districts, setDistricts] = useState([]);
+  const [popularVote, setPopularVote] = useState({ party1: "0", party2: "0" });
+  const [districtVotes, setDistrictVotes] = useState({
+    party1: "0",
+    party2: "0",
+  });
+  const [partySelection, setPartySelection] = useState("red");
 
   useEffect(() => {
     //init grid
@@ -37,8 +48,7 @@ export default () => {
     let districtsCreated = 0;
     let badGrid = true;
 
-
-    while(badGrid){
+    while (badGrid) {
       for (let i = 0; i < (numOfDistricts + 2) / 2; i++) {
         console.log("DISTRICT:");
         districtsCreated++;
@@ -49,7 +59,7 @@ export default () => {
         let district1s = [],
           district2s = [];
 
-        while (party1Citizens + party2Citizens > 4) {
+        while (party1Citizens + party2Citizens > 3) {
           let totalNumberOfCitizens = 0;
           let numOf1s = 0,
             numOf2s = 0;
@@ -70,9 +80,7 @@ export default () => {
             }
           }
 
-          console.log(
-            numOf1s + "-" + numOf2s
-          );
+          console.log(numOf1s + "-" + numOf2s);
           district1s.push(numOf1s);
           district2s.push(numOf2s);
         }
@@ -82,9 +90,9 @@ export default () => {
         district2s.push(party2Citizens);
 
         const attemptToPlace = placeCitizens(tempGrid, district1s, district2s);
-        if(attemptToPlace.length > 0){
+        if (attemptToPlace.length > 0) {
           tempGrid = attemptToPlace;
-        } else{
+        } else {
           badGrid = true;
         }
       }
@@ -93,13 +101,13 @@ export default () => {
 
       for (let i = 0; i < numOfDistricts - districtsCreated + 1; i++) {
         console.log("DISTRICT:");
-        let party2Citizens = populationGoal - Math.floor(Math.random() * 2 + 1);
+        let party2Citizens = populationGoal - Math.floor(Math.random() * 2);
         let party1Citizens = populationGoal - party2Citizens;
 
         let district1s = [],
           district2s = [];
 
-        while (party1Citizens + party2Citizens > 4) {
+        while (party1Citizens + party2Citizens > 3) {
           let totalNumberOfCitizens = 0;
           let numOf1s = 0,
             numOf2s = 0;
@@ -129,29 +137,33 @@ export default () => {
         district2s.push(party2Citizens);
 
         const attemptToPlace = placeCitizens(tempGrid, district1s, district2s);
-        if(attemptToPlace.length > 0){
+        if (attemptToPlace.length > 0) {
           tempGrid = attemptToPlace;
           badGrid = false;
-        } else{
+        } else {
           badGrid = true;
         }
       }
     }
 
-    let totalParty1 = 0, totalParty2 = 0;
-    for(const row of tempGrid){
-      for(const tile of row){
-        for(const citizen of tile.population){
-          if(citizen === 1){
+    let totalParty1 = 0,
+      totalParty2 = 0;
+    for (const row of tempGrid) {
+      for (const tile of row) {
+        for (const citizen of tile.population) {
+          if (citizen === 1) {
             totalParty1++;
-          } else if(citizen === 2){
+          } else if (citizen === 2) {
             totalParty2++;
           }
         }
       }
     }
 
-    console.log("POPULAR VOTE:", totalParty1, totalParty2);
+    setPopularVote({
+      party1: totalParty1 / (totalParty1 + totalParty2),
+      party2: totalParty2 / (totalParty1 + totalParty2),
+    });
 
     setGrid(tempGrid);
   }, []);
@@ -178,7 +190,7 @@ export default () => {
           neighbors++;
           valid.push({
             x: -1,
-            y: 0
+            y: 0,
           });
         }
 
@@ -189,7 +201,7 @@ export default () => {
           neighbors++;
           valid.push({
             x: 1,
-            y: 0
+            y: 0,
           });
         }
 
@@ -200,7 +212,7 @@ export default () => {
           neighbors++;
           valid.push({
             x: 0,
-            y: -1
+            y: -1,
           });
         }
 
@@ -211,7 +223,7 @@ export default () => {
           neighbors++;
           valid.push({
             x: 0,
-            y: 1
+            y: 1,
           });
         }
 
@@ -236,7 +248,7 @@ export default () => {
         let leftToPlace = party1.length - 1;
         let index = 1;
 
-        while(leftToPlace > 0){
+        while (leftToPlace > 0) {
           console.log(valid);
           const randomDir = Math.floor(Math.random() * valid.length);
           const offset = valid[randomDir];
@@ -260,9 +272,9 @@ export default () => {
           index++;
           leftToPlace--;
         }
-      } 
+      }
 
-      if(attempts >= gridDimension * gridDimension){
+      if (attempts >= gridDimension * gridDimension) {
         console.log("CATASTROPHIC FALIURE");
         return [];
       }
@@ -619,6 +631,19 @@ export default () => {
         }
 
         console.log(districtsNow);
+        let party1Districts = 0,
+          party2Districts = 0;
+        for (const district of districtsNow) {
+          if (district.party === 1) {
+            party1Districts++;
+          } else if (district.party === 2) {
+            party2Districts++;
+          }
+        }
+        setDistrictVotes({
+          party1: party1Districts / (numOfDistricts + 1),
+          party2: party2Districts / (numOfDistricts + 1),
+        });
         setDistricts(districtsNow);
       }
 
@@ -633,48 +658,237 @@ export default () => {
       <GlobalCSS />
       <div
         css={css`
-          width: 80vh;
-          max-width: 1000px;
-          height: 80vh;
-          max-height: 1000px;
-          margin: 0 auto;
-          border: 7px solid #333;
-          border-radius: 20px;
-          background-color: #111;
+          display: grid;
+          height: 100vh;
+          width: 100vw;
+          grid-template-areas:
+            "logo play info"
+            "foot foot foot";
+          grid-template-columns: 25vw 50vw 25vw;
+          grid-template-rows: auto 40px;
         `}
       >
-        {grid.map((row, rowIndex) => {
-          return (
-            <div
+        <div
+          css={css`
+            grid-area: logo;
+            width: 100%;
+            height: 100%;
+            padding: 10px 20px 0 20px;
+          `}
+        >
+          <img
+            src={Logo}
+            alt="GerrymanderMe logo"
+            css={css`
+              width: 300px;
+              display: inline-block;
+            `}
+          />
+          <div>
+            <p
               css={css`
-                height: calc(
-                  (80vh - (5px * ${gridDimension + 1})) / ${gridDimension}
-                );
-                margin: 5px 0;
-
-                :last-of-type {
-                  border-bottom: none;
-                }
+                font-size: 24px;
+                color: #222;
+                font-weight: 700;
               `}
             >
-              {row.map((tile, tileIndex) => {
-                return (
-                  <>
-                    <Tile
-                      dimension={gridDimension}
-                      color={tile.color}
-                      connections={tile.connections}
-                      population={tile.population}
-                      onClick={() => {
-                        addSelection(rowIndex, tileIndex);
-                      }}
-                    />
-                  </>
-                );
-              })}
-            </div>
-          );
-        })}
+              Party Selector
+            </p>
+            <p
+              css={css`
+                font-size: 16px;
+                color: #222;
+                font-weight: 500;
+                margin-top: -15px;
+              `}
+            >
+              Which party would you like to work for?
+            </p>
+            <PartySelector
+              changeSelectedParty={(value) => setPartySelection(value)}
+            />
+          </div>
+          <p
+            css={css`
+              font-size: 24px;
+              font-weight: 700;
+              color: #222;
+            `}
+          >
+            Game information
+          </p>
+          <p
+            css={css`
+              font-size: 16px;
+              color: #222;
+              font-weight: 500;
+              margin-top: -15px;
+              padding-right: 30px;
+            `}
+          >
+            This game was created in July of 2020 by Christian Bernier. It is currently an ongoing project, so more features will be coming soon!
+            <br/><br/>Please feel free to <a
+              href="mailto:64christianb@gmail.com"
+              target="_blank"
+              css={css`
+                color: #555;
+              `}
+            >send me an email</a> with comments, questions, or bug reports!
+            <br/><br/>Also, this project is open source on <a
+              href="https://github.com/christianbernier/gerrymander-me"
+              target="_blank"
+              css={css`
+                color: #555;
+              `}
+            >GitHub</a>.
+          </p>
+        </div>
+        <span
+          css={css`
+            display: inline-block;
+            grid-area: play;
+          `}
+        >
+          <VoteBar
+            width="70vh"
+            title="Popular Vote"
+            party1={popularVote.party1}
+            party2={popularVote.party2}
+            primaryParty={partySelection}
+          />
+
+          <VoteBar
+            width="70vh"
+            title="District Vote"
+            party1={districtVotes.party1}
+            party2={districtVotes.party2}
+            primaryParty={partySelection}
+          />
+          <div
+            css={css`
+              width: 70vh;
+              max-width: 1000px;
+              height: 70vh;
+              max-height: 1000px;
+              margin: 0 auto;
+              border: 7px solid #333;
+              border-radius: 20px;
+              background-color: #111;
+            `}
+          >
+            {grid.map((row, rowIndex) => {
+              return (
+                <div
+                  css={css`
+                    height: calc(
+                      (70vh - (5px * ${gridDimension + 1})) / ${gridDimension}
+                    );
+                    margin: 5px 0;
+
+                    :last-of-type {
+                      border-bottom: none;
+                    }
+                  `}
+                >
+                  {row.map((tile, tileIndex) => {
+                    return (
+                      <>
+                        <Tile
+                          dimension={gridDimension}
+                          color={tile.color}
+                          connections={tile.connections}
+                          population={tile.population}
+                          onClick={() => {
+                            addSelection(rowIndex, tileIndex);
+                          }}
+                          primaryParty={partySelection}
+                        />
+                      </>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+        </span>
+        <div
+          css={css`
+            grid-area: info;
+            width: 100%;
+            height: 100%;
+            padding-top: 20px;
+          `}
+        >
+
+          <p
+            css={css`
+              font-size: 24px;
+              font-weight: 700;
+              color: #222;
+            `}
+          >
+            What is this game?
+          </p>
+          <p
+            css={css`
+              font-size: 16px;
+              color: #222;
+              font-weight: 500;
+              margin-top: -15px;
+              padding-right: 30px;
+            `}
+          >
+            GerrymanderMe! shows the corrupt practice of gerrymandering through a fun and easy-to-understand game. If you would like to learn more about the practice, specifically in America, please refer to this article from CNN: <a
+              href="https://www.cnn.com/2019/06/27/politics/what-is-gerrymandering-trnd/index.html"
+              target="_blank"
+              css={css`
+                color: #555;
+              `}
+            >What is gerrymandering?</a>
+          </p>
+
+          <p
+            css={css`
+              font-size: 24px;
+              font-weight: 700;
+              color: #222;
+            `}
+          >
+            How to play
+          </p>
+          <p
+            css={css`
+              font-size: 16px;
+              color: #222;
+              font-weight: 500;
+              margin-top: -15px;
+              padding-right: 30px;
+            `}
+          >
+            Choose which party you would like to help gerrymander the districts on the board. Notice how the popular vote (total number of votes from all citizens) is against your party. Start by clicking two tiles adjacent to one another, creating voting districts of exactly eight (8) citizens and see the district vote change.
+            <br/><br/>Your goal is to make it so your party wins the district vote (>50%), even with less than a popular majority.
+            <br/><br/>You may have as many tiles in one district, but make sure there are exactly eight (8) citizens per district.
+          </p>
+        </div>
+        <div
+          css={css`
+            grid-area: foot;
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `}
+        >
+          <p
+            css={css`
+              font-size: 15px;
+              font-family: serif;
+              color: white;
+            `}
+          >
+            GerrymanderMe! v.0.1.0 © 2020 to Christian Bernier
+          </p>
+        </div>
       </div>
     </>
   );
