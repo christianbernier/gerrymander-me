@@ -21,7 +21,7 @@ export default ({dimension, color, connections, population, onClick, primaryPart
   }
   
 
-  const maxBorderRadius = "25px";
+  const maxBorderRadius = "40%";
 
   return(
     <div

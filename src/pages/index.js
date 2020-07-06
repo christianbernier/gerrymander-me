@@ -666,6 +666,16 @@ export default () => {
             "foot foot foot";
           grid-template-columns: 25vw 50vw 25vw;
           grid-template-rows: auto 40px;
+
+          @media only screen and (max-width: 1310px) {
+            grid-template-areas:
+              "play"
+              "logo"
+              "info"
+              "foot";
+            grid-template-columns: calc(100vw - 16px);
+            grid-template-rows: auto auto auto 40px;
+          }
         `}
       >
         <div
@@ -674,6 +684,11 @@ export default () => {
             width: 100%;
             height: 100%;
             padding: 10px 20px 0 20px;
+
+            @media only screen and (max-width: 1310px) {
+              width: 90vw;
+              
+            }
           `}
         >
           <img
@@ -767,9 +782,7 @@ export default () => {
           <div
             css={css`
               width: 70vh;
-              max-width: 1000px;
               height: 70vh;
-              max-height: 1000px;
               margin: 0 auto;
               border: 7px solid #333;
               border-radius: 20px;
@@ -817,6 +830,11 @@ export default () => {
             width: 100%;
             height: 100%;
             padding-top: 20px;
+
+            @media only screen and (max-width: 1310px) {
+              width: 90vw;
+              padding-left: 20px;
+            }
           `}
         >
 
@@ -877,6 +895,8 @@ export default () => {
             display: flex;
             justify-content: center;
             align-items: center;
+
+            
           `}
         >
           <p
@@ -886,7 +906,7 @@ export default () => {
               color: white;
             `}
           >
-            GerrymanderMe! v.0.1.0 © 2020 to Christian Bernier
+            GerrymanderMe! v.0.1.1 © 2020 to Christian Bernier
           </p>
         </div>
       </div>

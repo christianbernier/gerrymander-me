@@ -23,11 +23,11 @@ export default ({party, primaryParty}) => {
   return(
     <div
       css={css`
-        width: 5px;
-        height: 20px;
+        width: 10%;
+        height: 40%;
         border-radius: 100px;
         background-color: ${colorToShow};
-        margin: 0 2px;
+        margin: 0 5%;
       `}
     />
   )

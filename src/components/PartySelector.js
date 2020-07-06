@@ -29,6 +29,10 @@ export default ({changeSelectedParty}) => {
           border: ${(currentlySelected === "red") ? "7px solid #333" : "none"};
           align-items: center;
           justify-content: center;
+
+          @media only screen and (max-width: 1310px) {
+            width: 40vw;
+          }
         `}
         onClick={() => updateCurrentlySelectedParty("red")}
       >
@@ -54,6 +58,10 @@ export default ({changeSelectedParty}) => {
           border: ${(currentlySelected === "blue") ? "7px solid #333" : "none"};
           align-items: center;
           justify-content: center;
+
+          @media only screen and (max-width: 1310px) {
+            width: 40vw;
+          }
         `}
         onClick={() => updateCurrentlySelectedParty("blue")}
       >
