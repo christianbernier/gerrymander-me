@@ -18,6 +18,10 @@ export default ({ width, party1, party2, title, primaryParty }) => {
         border: 7px solid #333;
         border-radius: 100px;
         margin: 10px auto;
+
+        @media only screen and (max-width: 1310px) {
+          width: 90vw;
+        }
       `}
     >
       <p
@@ -73,6 +77,10 @@ export default ({ width, party1, party2, title, primaryParty }) => {
           border-radius: 100px;
           border-top-right-radius: 0;
           border-bottom-right-radius: 0;
+
+          @media only screen and (max-width: 1310px) {
+            width: calc(90vw * ${party1});
+          }
         `}
       />
       <div
@@ -86,6 +94,11 @@ export default ({ width, party1, party2, title, primaryParty }) => {
           border-top-left-radius: 0;
           border-bottom-left-radius: 0;
           margin-left: calc(${width} - ${width} * ${party2});
+
+          @media only screen and (max-width: 1310px) {
+            width: calc(90vw * ${party2});
+            margin-left: calc(90vw - 90vw * ${party2});
+          }
         `}
       />
     </div>

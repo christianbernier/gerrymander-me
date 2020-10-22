@@ -1,70 +1,96 @@
 import React from "react";
-import {css} from "@emotion/core";
+import { css } from "@emotion/core";
 import Citizen from "../components/Citizen";
 
-export default ({dimension, color, connections, population, onClick, primaryParty}) => {
+export default ({
+  dimension,
+  color,
+  connections,
+  population,
+  onClick,
+  primaryParty,
+}) => {
   let colorToShow = "black";
-  if(primaryParty === "red"){
-    switch(color){
-      case 0: colorToShow = "white"; break;
-      case 1: colorToShow = "#ff8f8f"; break;
-      case 2: colorToShow = "#8f93ff"; break;
-      default: colorToShow = "black";
+  if (primaryParty === "red") {
+    switch (color) {
+      case 0:
+        colorToShow = "white";
+        break;
+      case 1:
+        colorToShow = "#ff8f8f";
+        break;
+      case 2:
+        colorToShow = "#8f93ff";
+        break;
+      case 3:
+        colorToShow = "#ccc"; //selection
+        break;
+      default:
+        colorToShow = "black";
     }
-  } else if(primaryParty === "blue"){
-    switch(color){
-      case 0: colorToShow = "white"; break;
-      case 1: colorToShow = "#8f93ff"; break;
-      case 2: colorToShow = "#ff8f8f"; break;
-      default: colorToShow = "black";
+  } else if (primaryParty === "blue") {
+    switch (color) {
+      case 0:
+        colorToShow = "white";
+        break;
+      case 1:
+        colorToShow = "#8f93ff";
+        break;
+      case 2:
+        colorToShow = "#ff8f8f";
+        break;
+      default:
+        colorToShow = "black";
     }
   }
-  
 
   const maxBorderRadius = "40%";
 
-  return(
+  return (
     <div
       css={css`
-        width: calc((70vh - (5px * ${dimension + 1})) / ${dimension});
+        width: calc(
+          (min(calc(50vw * 0.9), 70vh) - (5px * ${dimension + 1})) /
+            ${dimension}
+        );
         height: 100%;
         margin: 0 2.5px;
         display: inline-flex;
         background-color: ${colorToShow};
-        border-top-left-radius: ${(connections.top || connections.left) ? "0" : maxBorderRadius};
-        border-top-right-radius: ${(connections.top || connections.right) ? "0" : maxBorderRadius};
-        border-bottom-left-radius: ${(connections.bottom || connections.left) ? "0" : maxBorderRadius};
-        border-bottom-right-radius: ${(connections.bottom || connections.right) ? "0" : maxBorderRadius};
+        border-top-left-radius: ${connections.top || connections.left
+          ? "0"
+          : maxBorderRadius};
+        border-top-right-radius: ${connections.top || connections.right
+          ? "0"
+          : maxBorderRadius};
+        border-bottom-left-radius: ${connections.bottom || connections.left
+          ? "0"
+          : maxBorderRadius};
+        border-bottom-right-radius: ${connections.bottom || connections.right
+          ? "0"
+          : maxBorderRadius};
 
         flex-direction: row;
         align-items: center;
         justify-content: center;
 
-        :first-child{
+        :first-child {
           margin-left: 5px;
         }
+
+        @media only screen and (max-width: 1310px) {
+          width: calc((90vw - (5px * ${dimension + 1})) / ${dimension});
+        }
       `}
-      onClick = {onClick}
+      onClick={onClick}
     >
-      {
-        (population.length > 0) ? 
-        (
-          population.map(citizen => {
-            return(
-              <Citizen
-                party = {citizen}
-                primaryParty = {primaryParty}
-              />
-            )
-          })
-        ) : (
-          <Citizen
-            party = {0}
-            primaryParty = {primaryParty}
-          />
-        )
-        
-      }
+      {population.length > 0 ? (
+        population.map((citizen) => {
+          return <Citizen party={citizen} primaryParty={primaryParty} />;
+        })
+      ) : (
+        <Citizen party={0} primaryParty={primaryParty} />
+      )}
     </div>
-  )
-}
+  );
+};

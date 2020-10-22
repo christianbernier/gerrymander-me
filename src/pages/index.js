@@ -50,7 +50,7 @@ export default () => {
 
     while (badGrid) {
       for (let i = 0; i < (numOfDistricts + 2) / 2; i++) {
-        console.log("DISTRICT:");
+        // console.log("DISTRICT:");
         districtsCreated++;
         const party1Citizens =
           Math.floor(populationGoal / 2) + 1 + Math.floor(Math.random() * 2);
@@ -80,12 +80,12 @@ export default () => {
             }
           }
 
-          console.log(numOf1s + "-" + numOf2s);
+          // console.log(numOf1s + "-" + numOf2s);
           district1s.push(numOf1s);
           district2s.push(numOf2s);
         }
 
-        console.log(party1Citizens + "-" + party2Citizens);
+        // console.log(party1Citizens + "-" + party2Citizens);
         district1s.push(party1Citizens);
         district2s.push(party2Citizens);
 
@@ -97,10 +97,10 @@ export default () => {
         }
       }
 
-      console.log("---");
+      // console.log("---");
 
       for (let i = 0; i < numOfDistricts - districtsCreated + 1; i++) {
-        console.log("DISTRICT:");
+        //console.log("DISTRICT:");
         let party2Citizens = populationGoal - Math.floor(Math.random() * 2);
         let party1Citizens = populationGoal - party2Citizens;
 
@@ -127,12 +127,12 @@ export default () => {
               }
             }
           }
-          console.log(numOf1s + "-" + numOf2s);
+          //console.log(numOf1s + "-" + numOf2s);
           district1s.push(numOf1s);
           district2s.push(numOf2s);
         }
 
-        console.log(party1Citizens + "-" + party2Citizens);
+        //console.log(party1Citizens + "-" + party2Citizens);
         district1s.push(party1Citizens);
         district2s.push(party2Citizens);
 
@@ -168,8 +168,16 @@ export default () => {
     setGrid(tempGrid);
   }, []);
 
+  useEffect(() => {
+    let currentGrid = JSON.parse(JSON.stringify(grid));
+    if (!selectedTiles[0]) {
+      return;
+    }
+    currentGrid[selectedTiles[0].x][selectedTiles[0].y].color = 3;
+    setGrid(currentGrid);
+  }, [selectedTiles]);
+
   function placeCitizens(currGrid, party1, party2) {
-    console.log("called");
     let successfullyPlaced = false;
     let attempts = 0;
 
@@ -228,10 +236,10 @@ export default () => {
         }
 
         if (neighbors < party1.length) {
-          console.log("unsuccessful");
+          // console.log("unsuccessful");
           continue;
         } else {
-          console.log("successful at ", tryingX, " ", tryingY, valid);
+          // console.log("successful at ", tryingX, " ", tryingY, valid);
           successfullyPlaced = true;
         }
 
@@ -249,14 +257,14 @@ export default () => {
         let index = 1;
 
         while (leftToPlace > 0) {
-          console.log(valid);
+          // console.log(valid);
           const randomDir = Math.floor(Math.random() * valid.length);
           const offset = valid[randomDir];
           const x = tryingX + offset.x;
           const y = tryingY + offset.y;
           valid.splice(randomDir, 1);
 
-          console.log(x, y);
+          // console.log(x, y);
 
           let placing = [];
           for (let j = 0; j < party1[index]; j++) {
@@ -275,7 +283,7 @@ export default () => {
       }
 
       if (attempts >= gridDimension * gridDimension) {
-        console.log("CATASTROPHIC FALIURE");
+        // console.log("CATASTROPHIC FALIURE");
         return [];
       }
     }
@@ -630,7 +638,7 @@ export default () => {
           }
         }
 
-        console.log(districtsNow);
+        // console.log(districtsNow);
         let party1Districts = 0,
           party2Districts = 0;
         for (const district of districtsNow) {
@@ -669,8 +677,8 @@ export default () => {
 
           @media only screen and (max-width: 1310px) {
             grid-template-areas:
-              "play"
               "logo"
+              "play"
               "info"
               "foot";
             grid-template-columns: calc(100vw - 16px);
@@ -687,7 +695,6 @@ export default () => {
 
             @media only screen and (max-width: 1310px) {
               width: 90vw;
-              
             }
           `}
         >
@@ -723,40 +730,76 @@ export default () => {
               changeSelectedParty={(value) => setPartySelection(value)}
             />
           </div>
-          <p
-            css={css`
-              font-size: 24px;
-              font-weight: 700;
-              color: #222;
-            `}
-          >
-            Game information
-          </p>
-          <p
-            css={css`
-              font-size: 16px;
-              color: #222;
-              font-weight: 500;
-              margin-top: -15px;
-              padding-right: 30px;
-            `}
-          >
-            This game was created in July of 2020 by Christian Bernier. It is currently an ongoing project, so more features will be coming soon!
-            <br/><br/>Please feel free to <a
-              href="mailto:64christianb@gmail.com"
-              target="_blank"
+          <div>
+            <p
               css={css`
-                color: #555;
+                font-size: 24px;
+                font-weight: 700;
+                color: #222;
               `}
-            >send me an email</a> with comments, questions, or bug reports!
-            <br/><br/>Also, this project is open source on <a
-              href="https://github.com/christianbernier/gerrymander-me"
-              target="_blank"
+            >
+              Game information
+            </p>
+            <p
               css={css`
-                color: #555;
+                font-size: 16px;
+                color: #222;
+                font-weight: 500;
+                margin-top: -15px;
+                padding-right: 30px;
               `}
-            >GitHub</a>.
-          </p>
+            >
+              This game was created in July of 2020 by Christian Bernier. It is
+              currently an ongoing project, so more features will be coming
+              soon!
+              <br />
+              <br />
+              Please feel free to{" "}
+              <a
+                href="mailto:64christianb@gmail.com"
+                target="_blank"
+                css={css`
+                  color: #555;
+                `}
+              >
+                send me an email
+              </a>{" "}
+              with comments, questions, or bug reports!
+              <br />
+              <br />
+              Also, this project is open source on{" "}
+              <a
+                href="https://github.com/christianbernier/gerrymander-me"
+                target="_blank"
+                css={css`
+                  color: #555;
+                `}
+              >
+                GitHub
+              </a>
+              .
+            </p>
+            <p
+              css={css`
+                font-size: 24px;
+                font-weight: 700;
+                color: #222;
+              `}
+            >
+              Recent updates
+            </p>
+            <p
+              css={css`
+                font-size: 16px;
+                color: #222;
+                font-weight: 500;
+                margin-top: -15px;
+                padding-right: 30px;
+              `}
+            >
+              GerrymanderMe! was last updated on October 22nd, 2020. In that update (v.0.2.0), the sizing of the grid was fixed, a color is displayed when selecting tiles, and some optimizations were made to the code.
+            </p>
+          </div>
         </div>
         <span
           css={css`
@@ -765,7 +808,7 @@ export default () => {
           `}
         >
           <VoteBar
-            width="70vh"
+            width="min(calc(50vw * 0.9), 70vh)"
             title="Popular Vote"
             party1={popularVote.party1}
             party2={popularVote.party2}
@@ -773,7 +816,7 @@ export default () => {
           />
 
           <VoteBar
-            width="70vh"
+            width="min(calc(50vw * 0.9), 70vh)"
             title="District Vote"
             party1={districtVotes.party1}
             party2={districtVotes.party2}
@@ -781,12 +824,17 @@ export default () => {
           />
           <div
             css={css`
-              width: 70vh;
-              height: 70vh;
+              width: min(calc(50vw * 0.9), 70vh);
+              height: min(calc(50vw * 0.9), 70vh);
               margin: 0 auto;
               border: 7px solid #333;
               border-radius: 20px;
               background-color: #111;
+
+              @media only screen and (max-width: 1310px) {
+                width: 90vw;
+                height: 90vw;
+              }
             `}
           >
             {grid.map((row, rowIndex) => {
@@ -794,12 +842,21 @@ export default () => {
                 <div
                   css={css`
                     height: calc(
-                      (70vh - (5px * ${gridDimension + 1})) / ${gridDimension}
+                      (
+                          min(calc(50vw * 0.9), 70vh) -
+                            (5px * ${gridDimension + 1})
+                        ) / ${gridDimension}
                     );
                     margin: 5px 0;
 
                     :last-of-type {
                       border-bottom: none;
+                    }
+
+                    @media only screen and (max-width: 1310px) {
+                      height: calc(
+                        (90vw - (5px * ${gridDimension + 1})) / ${gridDimension}
+                      );
                     }
                   `}
                 >
@@ -837,7 +894,6 @@ export default () => {
             }
           `}
         >
-
           <p
             css={css`
               font-size: 24px;
@@ -856,13 +912,19 @@ export default () => {
               padding-right: 30px;
             `}
           >
-            GerrymanderMe! shows the corrupt practice of gerrymandering through a fun and easy-to-understand game. If you would like to learn more about the practice, specifically in America, please refer to this article from CNN: <a
+            GerrymanderMe! shows the corrupt practice of gerrymandering through
+            a fun and easy-to-understand game. If you would like to learn more
+            about the practice, specifically in America, please refer to this
+            article from CNN:{" "}
+            <a
               href="https://www.cnn.com/2019/06/27/politics/what-is-gerrymandering-trnd/index.html"
               target="_blank"
               css={css`
                 color: #555;
               `}
-            >What is gerrymandering?</a>
+            >
+              What is gerrymandering?
+            </a>
           </p>
 
           <p
@@ -883,9 +945,19 @@ export default () => {
               padding-right: 30px;
             `}
           >
-            Choose which party you would like to help gerrymander the districts on the board. Notice how the popular vote (total number of votes from all citizens) is against your party. Start by clicking two tiles adjacent to one another, creating voting districts of exactly eight (8) citizens and see the district vote change.
-            <br/><br/>Your goal is to make it so your party wins the district vote (>50%), even with less than a popular majority.
-            <br/><br/>You may have as many tiles in one district, but make sure there are exactly eight (8) citizens per district.
+            Choose which party you would like to help gerrymander the districts
+            on the board. Notice how the popular vote (total number of votes
+            from all citizens) is against your party. Start by clicking two
+            tiles adjacent to one another, creating voting districts of exactly
+            eight (8) citizens and see the district vote change.
+            <br />
+            <br />
+            Your goal is to make it so your party wins the district vote (>50%),
+            even with less than a popular majority.
+            <br />
+            <br />
+            You may have as many tiles in one district, but make sure there are
+            exactly eight (8) citizens per district.
           </p>
         </div>
         <div
@@ -895,8 +967,6 @@ export default () => {
             display: flex;
             justify-content: center;
             align-items: center;
-
-            
           `}
         >
           <p
@@ -906,7 +976,7 @@ export default () => {
               color: white;
             `}
           >
-            GerrymanderMe! v.0.1.1 © 2020 to Christian Bernier
+            GerrymanderMe! v.0.2.0 © 2020 to Christian Bernier
           </p>
         </div>
       </div>
